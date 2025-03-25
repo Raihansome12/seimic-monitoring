@@ -9,8 +9,8 @@ class GpsLocation extends Model
 {
 
     protected $fillable = [
-        'longitude',
         'latitude',
+        'longitude',
         'reading_times'
     ];
 

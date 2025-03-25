@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('gps_locations', function (Blueprint $table) {
             $table->id();
-            $table->float('longitude', 10, 6);
-            $table->float('latitude', 10, 6);
+            $table->float('latitude');
+            $table->float('longitude');
             $table->timestamp('reading_times');
             $table->timestamps();
         });

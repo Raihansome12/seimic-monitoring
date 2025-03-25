@@ -15,9 +15,7 @@
         data-lng="{{ $position['longitude'] }}">
     </div>
     <!-- Leaflet JS + Script Custom -->
-    @push('scripts')
-        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    @endpush
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="{{ asset('js/map.js') }}"></script>
 </div>

@@ -4,93 +4,85 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\GpsLocation;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 
 class GpsLocationMap extends Component
-{   
-    public $latitude;
-    public $longitude;
+{     
+    public $location;
+    public $currentTime;
+    public $city = 'Unknown';
 
-    protected $listeners = ['echo:gps-data,NewGpsDataReceived' => 'updateGpsLocation'];
+    protected $listeners = ['echo:gps-data,NewGpsDataReceived' => 'handleNewLocation'];
 
     public function mount()
     {
-        // Ambil lokasi terbaru dari database saat halaman dimuat
+        // Load most recent location
         $latestLocation = GpsLocation::latest()->first();
         if ($latestLocation) {
-            $this->latitude = $latestLocation->latitude;
-            $this->longitude = $latestLocation->longitude;
+            $this->location = [
+                'latitude' => $latestLocation->latitude, 
+                'longitude' => $latestLocation->longitude
+            ];
+            $this->fetchCityName($latestLocation->latitude, $latestLocation->longitude);
+        } else {
+            $this->location = [
+                'latitude' => -6.200000,
+                'longitude' => 106.816666
+            ];
         }
+
+        $this->currentTime = now()->setTimezone('Asia/Jakarta')->format('H:i:s');
     }
 
-    public function updateGpsLocation($event)
+    public function handleNewLocation($payload)
     {
-        $this->latitude = $event['location']['latitude'];
-        $this->longitude = $event['location']['longitude'];
+        $this->location = [
+            'latitude' => $payload['latitude'],
+            'longitude' => $payload['longitude'],
+        ];
+        $this->fetchCityName($payload['latitude'], $payload['longitude']);
+        $this->currentTime = now()->setTimezone('Asia/Jakarta')->format('H:i:s');
+
+        $this->dispatch('gps-location-updated', $this->location);
+    }
+
+    private function fetchCityName($latitude, $longitude)
+    {
+        try {
+            $apiKey = "76f06bc3e6df41358d58aa3b80c00349"; // Ganti dengan API Key kamu
+
+            $response = Http::get("https://api.opencagedata.com/geocode/v1/json", [
+                'q' => "$latitude,$longitude",
+                'key' => $apiKey,
+                'language' => 'id', // Bahasa Indonesia
+                'pretty' => 1
+            ]);
+
+            $data = $response->json();
+            $components = $data['results'][0]['components'] ?? [];
+
+            // Ambil nama kabupaten/kota dan provinsi
+            $city = $components['city'] ??
+                    $components['county'] ??
+                    'Unknown';
+            $province = $components['state'] ?? ''; // Provinsi
+
+            // Format hasilnya: "Kabupaten/Kota, Provinsi"
+            $this->city = trim("{$city}, {$province}", ", ");
+
+        } catch (\Exception $e) {
+            Log::error("Error fetching city: " . $e->getMessage());
+            $this->city = 'Unknown';
+        }
     }
 
     public function render()
     {
-        return view('livewire.gps-location-map');
+        return view('livewire.gps-location-map', [
+            'location' => $this->location,
+            'city' => $this->city,
+            'currentTime' => $this->currentTime,
+        ]);
     }
-    
-    // public $location;
-    // public $currentTime;
-    // public $city = 'Unknown';
-
-    // protected $listeners = ['echo:gps-data,NewGpsDataReceived' => 'handleNewLocation'];
-
-    // public function mount()
-    // {
-    //     // Load most recent location
-    //     $latestLocation = GpsLocation::latest('reading_times')->first();
-    //     if ($latestLocation) {
-    //         $this->location = ['latitude' => $latestLocation->latitude, 'longitude' => $latestLocation->longitude];
-    //         $this->fetchCityName($latestLocation->latitude, $latestLocation->longitude);
-    //     }
-
-    //     $this->currentTime = now()->setTimezone('Asia/Jakarta')->format('H:i:s');
-    // }
-
-    // public function handleNewLocation($payload)
-    // {
-    //     $this->location = [
-    //         'latitude' => $payload['latitude'],
-    //         'longitude' => $payload['longitude'],
-    //     ];
-    //     $this->fetchCityName($payload['latitude'], $payload['longitude']);
-    //     $this->currentTime = now()->setTimezone('Asia/Jakarta')->format('H:i:s');
-
-    //     $this->dispatch('gps-location-updated', $this->location);
-    // }
-
-    // private function fetchCityName($latitude, $longitude)
-    // {
-    //     try {
-    //         $response = Http::get("https://nominatim.openstreetmap.org/reverse", [
-    //             'lat' => $latitude,
-    //             'lon' => $longitude,
-    //             'format' => 'json'
-    //         ]);
-
-    //         if ($response->successful() && isset($response['address'])) {
-    //             $this->city = $response['address']['city'] ?? $response['address']['state'] ?? 'Unknown';
-    //         }
-    //     } catch (\Exception $e) {
-    //         $this->city = 'Unknown';
-    //     }
-    // }
-
-    // public function render()
-    // {
-    //     return view('livewire.gps-location-map', [
-    //         'location' => $this->location,
-    //         'city' => $this->city,
-    //         'currentTime' => $this->currentTime,
-    //     ]);
-    // }
-    // public function render()
-    // {
-    //     return view('livewire.gps-location-map');
-    // }
 }

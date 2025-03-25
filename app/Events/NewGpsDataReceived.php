@@ -28,8 +28,8 @@ class NewGpsDataReceived implements ShouldBroadcast
     public function broadcastWith()
     {
         return [
-        'longitude' => $this->location->longitude,
         'latitude' => $this->location->latitude,
+        'longitude' => $this->location->longitude,
         'reading_times' => $this->location->reading_times
         ];
     }

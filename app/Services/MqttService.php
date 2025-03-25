@@ -73,21 +73,33 @@ class MqttService
     {
         Log::info('Processing GPS data: ', [$data]);
         try {
+            // Validasi data sebelum disimpan
+            if (!isset($data['latitude']) || !isset($data['longitude'])) {
+                Log::warning('GPS data missing longitude or latitude', $data);
+                return;
+            }
+
+            $latitude = floatval($data['latitude']);
+            $longitude = floatval($data['longitude']);
+
+            // Cek apakah koordinat valid
+            if (!is_numeric($latitude) || !is_numeric($longitude)) {
+                Log::warning('Invalid GPS data received', ['latitude' => $latitude, 'longitude' => $longitude]);
+                return;
+            }
+
             // Store GPS data in database
             $location = GpsLocation::create([
-                'longitude' => isset($data['longitude']) ? floatval($data['longitude']) : null,
-                'latitude' => isset($data['latitude']) ? floatval($data['latitude']) : null,
+                'latitude' => $latitude,
+                'longitude' => $longitude,
                 'reading_times' => $data['reading_times'],
             ]);
-
-            Log::info('GPS location saved with ID: ' . $location->id);
             
             // Broadcast event to WebSocket
             event(new NewGpsDataReceived($location));
-            Log::info('NewGpsDataReceived event broadcasted');
+            
         } catch (\Exception $e) {
             Log::error('Error processing GPS data: ' . $e->getMessage());
-            Log::error('Stack trace: ' . $e->getTraceAsString());
         }
     }
 }
