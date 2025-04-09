@@ -8,16 +8,18 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('seismic_readings', function (Blueprint $table) {
+        Schema::create('ground_motions', function (Blueprint $table) {
             $table->id();
-            $table->json('adc_counts');
-            $table->timestamp('reading_times');
+            $table->foreignId('seismic_reading_id')->constrained()->onDelete('cascade');
+            $table->float('acceleration');
+            $table->float('velocity');
+            $table->float('displacement');
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('seismic_readings');
+        Schema::dropIfExists('ground_motions');
     }
 };

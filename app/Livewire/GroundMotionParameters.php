@@ -2,38 +2,37 @@
 
 namespace App\Livewire;
 
+use App\Models\GroundMotion;
 use Livewire\Component;
-use App\Models\SeismicReading;
 
 class GroundMotionParameters extends Component
 {
-    public $acceleration;
-    public $velocity;
-    public $displacement;
+    public $acceleration = 0;
+    public $velocity = 0;
+    public $displacement = 0;
 
     protected $listeners = ['echo:seismic-data,NewSeismicDataReceived' => 'handleNewReading'];
 
     public function mount()
     {
-        // Load most recent parameters
-        $latestReading = SeismicReading::latest('reading_times')->first();
-        
-        if ($latestReading) {
-            $this->acceleration = $latestReading->acceleration;
-            $this->velocity = $latestReading->velocity;
-            $this->displacement = $latestReading->displacement;
-        } else {
-            $this->acceleration = 0;
-            $this->velocity = 0;
-            $this->displacement = 0;
-        }
+        $this->updateWithMovingAverage();
     }
 
     public function handleNewReading($payload)
     {
-        $this->acceleration = $payload['reading']['acceleration'];
-        $this->velocity = $payload['reading']['velocity'];
-        $this->displacement = $payload['reading']['displacement'];
+        $this->updateWithMovingAverage();
+    }
+
+    private function updateWithMovingAverage()
+    {
+        // Ambil data dari 1 detik terakhir (50 sampel)
+        $recentReadings = GroundMotion::latest('created_at')->limit(1)->get();
+
+        if ($recentReadings->count() > 0) {
+            $this->acceleration = $recentReadings->avg('acceleration');
+            $this->velocity = $recentReadings->avg('velocity');
+            $this->displacement = $recentReadings->avg('displacement');
+        }
     }
 
     public function render()

@@ -8,38 +8,12 @@
 
     <!-- Container Peta -->
     <div id="map" class="w-full h-48 rounded-lg"></div>
- 
-
-
-    {{-- <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-    <script>
-        document.addEventListener("livewire:load", () => {
-            var map = L.map('map').setView([@this.latitude, @this.longitude], 10);
-
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(map);
-
-            var marker = L.marker([@this.latitude, @this.longitude]).addTo(map)
-                .bindPopup('Lokasi Terbaru')
-                .openPopup();
-
-            Livewire.on('updateGpsLocation', (lat, lng) => {
-                marker.setLatLng([lat, lng]).bindPopup('Lokasi Terbaru').openPopup();
-                map.setView([lat, lng], 12);
-            });
-        });
-    </script> --}}
-    
-    <!-- Leaflet JS -->
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
         var locationData = @json($location); 
-        var map = L.map('map').setView([locationData.latitude, locationData.longitude], 13);
+        var map = L.map('map').setView([locationData.latitude, locationData.longitude], 7);
     
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
@@ -58,6 +32,5 @@
             map.setView([newLocation.latitude, newLocation.longitude], 13);
         });
     </script>
-    
-    
+
 </div>

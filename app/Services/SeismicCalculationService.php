@@ -29,11 +29,24 @@ class SeismicCalculationService
         // Hitung displacement (integrasi kecepatan)
         $displacements = $this->integrate($velocities, self::DT);
 
-        return [
-            'acceleration' => $accelerations,
-            'velocity' => $velocities,
-            'displacement' => $displacements
+        // Hitung rata-rata
+        $avgAcceleration = $this->calculateAverage($accelerations);
+        $avgVelocity = $this->calculateAverage($velocities);
+        $avgDisplacement = $this->calculateAverage($displacements);
+
+    return [
+        'acceleration' => $accelerations,
+        'velocity' => $velocities,
+        'displacement' => $displacements,
+        'avg_acceleration' => $avgAcceleration,
+        'avg_velocity' => $avgVelocity,
+        'avg_displacement' => $avgDisplacement
         ];
+    }
+
+    private function calculateAverage(array $values): float
+    {
+        return count($values) > 0 ? array_sum($values) / count($values) : 0;
     }
 
     private function adcToVoltage(int $adcCount): float

@@ -1,12 +1,14 @@
 <div class="bg-gray-50 rounded-lg p-8 shadow">
-    <h3 class="font-bold text-gray-900 text-xl mb-6 pb-4 border-b border-gray-300 ">Ground Motion</h3>
+    <h3 class="font-bold text-gray-900 text-xl mb-6 pb-4 border-b border-gray-300">
+        Ground Motion
+    </h3>
     <div class="flex justify-center">
         <table class="w-full">
             <tr>
                 <td class="py-2">Acceleration</td>
                 <td class="py-2 text-right">
                     <div>
-                        100 µm/s&sup2
+                        {{ number_format($acceleration, 10) }} m/s²
                     </div>
                 </td>
             </tr>
@@ -14,7 +16,7 @@
                 <td class="py-2">Velocity</td>
                 <td class="py-2 text-right">
                     <div>
-                        100 µm/s
+                        {{ number_format($velocity, 10) }} m/s
                     </div>
                 </td>
             </tr>
@@ -22,7 +24,7 @@
                 <td class="py-2">Displacement</td>
                 <td class="py-2 text-right">
                     <div>
-                        100 µm
+                        {{ number_format($displacement, 10) }} m
                     </div>
                 </td>
             </tr>

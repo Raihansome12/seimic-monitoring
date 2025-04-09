@@ -27,8 +27,8 @@ class GpsLocationMap extends Component
             $this->fetchCityName($latestLocation->latitude, $latestLocation->longitude);
         } else {
             $this->location = [
-                'latitude' => -6.200000,
-                'longitude' => 106.816666
+                'latitude' => -6.15075243,
+                'longitude' => 105.44465359
             ];
         }
 
@@ -61,7 +61,7 @@ class GpsLocationMap extends Component
 
             $data = $response->json();
             $components = $data['results'][0]['components'] ?? [];
-
+            
             // Ambil nama kabupaten/kota dan provinsi
             $city = $components['city'] ??
                     $components['county'] ??
@@ -75,7 +75,11 @@ class GpsLocationMap extends Component
             Log::error("Error fetching city: " . $e->getMessage());
             $this->city = 'Unknown';
         }
+
+        
     }
+
+    
 
     public function render()
     {

@@ -11,11 +11,12 @@ class SeismicReading extends Model
 
     protected $fillable = [
         'adc_counts',
-        'acceleration',
-        'velocity',
-        'displacement',
         'reading_times'
     ];
+
+    public function details() {
+        return $this->hasOne(GroundMotion::class, 'seismic_reading_id');
+    }
 
     protected $casts = [
         'adc_counts' => 'array',
