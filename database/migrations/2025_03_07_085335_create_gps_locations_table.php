@@ -19,6 +19,6 @@ return new class extends Migration
     
     public function down(): void
     {
-        Schema::dropIfExists('gps_readings');
+        Schema::dropIfExists('gps_locations');
     }
 };

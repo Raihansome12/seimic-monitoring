@@ -7,9 +7,20 @@
     <script src="{{ asset('js/time.js') }}"></script>
 
     <!-- Container Peta -->
-    <div id="map" class="w-full h-48 rounded-lg"></div>
+    {{-- <div id="map" class="w-full h-48 rounded-lg"></div> --}}
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <div>
+        <h2 class="text-xl font-bold mb-4">GPS Location Update</h2>
+    
+        <div class="bg-white rounded-lg shadow p-4">
+            <p><strong>Latitude:</strong> {{ $location['latitude'] ?? '-' }}</p>
+            <p><strong>Longitude:</strong> {{ $location['longitude'] ?? '-' }}</p>
+            <p><strong>Waktu Lokal:</strong> {{ $currentTime ?? '-' }}</p>
+        </div>
+    </div>
+    
+
+    {{-- <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
         var locationData = @json($location); 
@@ -31,6 +42,6 @@
                   .openPopup();
             map.setView([newLocation.latitude, newLocation.longitude], 13);
         });
-    </script>
+    </script> --}}
 
 </div>

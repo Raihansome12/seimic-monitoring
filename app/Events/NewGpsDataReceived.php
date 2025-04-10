@@ -23,9 +23,14 @@ class NewGpsDataReceived implements ShouldBroadcastNow
 
     public function broadcastOn()
     {
-        return new Channel('gps-data');
+        return new Channel('gps-channel');
     }
-
+    
+    public function broadcastAs()
+    {
+        return 'gps-data';
+    }
+    
     public function broadcastWith()
     {
         return [

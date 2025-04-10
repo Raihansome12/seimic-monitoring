@@ -13,7 +13,8 @@ class GpsLocationMap extends Component
     public $currentTime;
     public $city = 'Unknown';
 
-    protected $listeners = ['echo:gps-data,NewGpsDataReceived' => 'handleNewLocation'];
+    // protected $listeners = ['echo:gps-data,NewGpsDataReceived' => 'handleNewLocation'];
+    protected $listeners = ['echo:gps-channel,gps-data' => 'handleNewLocation'];
 
     public function mount()
     {
@@ -60,6 +61,7 @@ class GpsLocationMap extends Component
             ]);
 
             $data = $response->json();
+
             $components = $data['results'][0]['components'] ?? [];
             
             // Ambil nama kabupaten/kota dan provinsi
@@ -78,8 +80,6 @@ class GpsLocationMap extends Component
 
         
     }
-
-    
 
     public function render()
     {
