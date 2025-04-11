@@ -10,6 +10,5 @@ Broadcast::channel('seismic-data', function () {
     return true;
 });
 
-Broadcast::channel('gps-data', function () {
-    return true;
+Broadcast::channel('gps-channel', function () {
 });

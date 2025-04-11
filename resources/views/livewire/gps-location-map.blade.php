@@ -11,12 +11,16 @@
 
     <div>
         <h2 class="text-xl font-bold mb-4">GPS Location Update</h2>
-    
+        <button wire:click="handleNewLocation({'latitude': -7.4541, 'longitude': 110.1})">
+            Tes Update
+        </button>
+        
         <div class="bg-white rounded-lg shadow p-4">
             <p><strong>Latitude:</strong> {{ $location['latitude'] ?? '-' }}</p>
             <p><strong>Longitude:</strong> {{ $location['longitude'] ?? '-' }}</p>
             <p><strong>Waktu Lokal:</strong> {{ $currentTime ?? '-' }}</p>
         </div>
+
     </div>
     
 

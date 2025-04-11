@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\GpsLocation;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -21,18 +22,25 @@ class NewGpsDataReceived implements ShouldBroadcastNow
         $this->location = $location;
     }
 
-    public function broadcastOn()
+    public function broadcastOn(): array
     {
-        return new Channel('gps-channel');
+        return [
+            new Channel('gps-channel'),
+        ];
     }
     
     public function broadcastAs()
     {
-        return 'gps-data';
+        return 'NewGpsDataReceived';
     }
-    
+
     public function broadcastWith()
     {
+        Log::info('Broadcasting GPS event', [
+            'latitude' => $this->location->latitude,
+            'longitude' => $this->location->longitude,
+        ]);
+        
         return [
         'latitude' => $this->location->latitude,
         'longitude' => $this->location->longitude,

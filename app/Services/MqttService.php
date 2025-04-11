@@ -102,7 +102,8 @@ class MqttService
             
             // Broadcast event to WebSocket
             // event(new NewGpsDataReceived($location));
-            broadcast(new NewGpsDataReceived($location))->toOthers();
+            broadcast(new NewGpsDataReceived($location));
+
             
         } catch (\Exception $e) {
             Log::error('Error processing GPS data: ' . $e->getMessage());

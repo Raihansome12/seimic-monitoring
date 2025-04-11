@@ -9,4 +9,4 @@ async function updateTime() {
 }
 
 updateTime(); // Jalankan saat halaman dimuat
-setInterval(updateTime, 1000); // Perbarui waktu setiap 1 detik
+setInterval(updateTime, 1000);

@@ -13,8 +13,7 @@ class GpsLocationMap extends Component
     public $currentTime;
     public $city = 'Unknown';
 
-    // protected $listeners = ['echo:gps-data,NewGpsDataReceived' => 'handleNewLocation'];
-    protected $listeners = ['echo:gps-channel,gps-data' => 'handleNewLocation'];
+    protected $listeners = ['handleNewLocation'];
 
     public function mount()
     {
